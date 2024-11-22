@@ -85,7 +85,7 @@ It also provides models and slot props for the player state.
 
 <template>
   <FreecasterPlayer video-id="...">
-    <template #default="{ muted, paused, volume, currentTime }"
+    <template #default="{ muted, paused, volume, currentTime }">
 
     </template>
   </FreecasterPlayer>
