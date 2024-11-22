@@ -48,7 +48,7 @@ an element ref and player options.
 </template>
 ```
 
-- [Composable parameters](src/composables/player.ts#82-L119)
+- [Composable parameters](src/composables/player.ts#L82-L119)
 - [Player options](src/types/Player.ts#L164-L356)
 - [Player instance](src/types/Player.ts#L1-L78)
 
@@ -92,5 +92,5 @@ It also provides models and slot props for the player state.
 </template>
 ```
 
-- [Component props](src/components/FreecasterPlayer.ts#L6-L10)
-- [Component events](src/components/FreecasterPlayer.ts#L13-L19)
+- [Component props](src/components/FreecasterPlayer.vue#L6-L10)
+- [Component events](src/components/FreecasterPlayer.vue#L13-L19)
