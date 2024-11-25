@@ -184,7 +184,7 @@ export interface PlayerOptions {
    * Video preload strategy
    * @default undefined
    */
-  preload: 'none' | 'metadata' | 'auto'
+  preload?: 'none' | 'metadata' | 'auto'
 
   /**
    * Set the volume percentage of the player. The value used must be between
