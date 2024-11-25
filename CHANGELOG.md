@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v1.1.0
+
+
+### 🚀 Enhancements
+
+- Make preload video optional ([0e26edf](https://github.com/plutotcool/vue-freecaster/commit/0e26edf))
+
+### ❤️ Contributors
+
+- Julien Dargelos <hello@julien.gl>
+
 ## v1.0.2
 
 
