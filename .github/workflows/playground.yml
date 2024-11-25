@@ -19,6 +19,7 @@ jobs:
       - run: pnpm build
         env:
           PLAYGROUND: true
+          BASE_URL: /${{ github.event.repository.name }}
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

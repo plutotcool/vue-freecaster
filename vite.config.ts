@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import dts from 'vite-plugin-dts'
 
 const environment = process.env.NODE_ENV
+const base = process.env.BASE_URL || undefined
 const playground = (
   process.env.PLAYGROUND === 'true' ||
   environment === 'development'
@@ -10,6 +11,7 @@ const playground = (
 
 export default defineConfig({
   root: playground ? 'playground' : '.',
+  base,
   build: playground ? undefined : {
     rollupOptions: {
       external: ['vue'],
