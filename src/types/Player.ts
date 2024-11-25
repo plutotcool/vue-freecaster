@@ -181,6 +181,12 @@ export interface PlayerOptions {
   width?: number
 
   /**
+   * Video preload strategy
+   * @default undefined
+   */
+  preload: 'none' | 'metadata' | 'auto'
+
+  /**
    * Set the volume percentage of the player. The value used must be between
    * 0 and 1 (see MDN). If the user specifically muted the sound, it will not
    * "force" the next time he loads the player. There are limitations when used

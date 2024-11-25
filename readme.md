@@ -49,7 +49,7 @@ an element ref and player options.
 ```
 
 - [Composable parameters](src/composables/player.ts#L82-L119)
-- [Player options](src/types/Player.ts#L164-L356)
+- [Player options](src/types/Player.ts#L164-L362)
 - [Player instance](src/types/Player.ts#L1-L78)
 
 ### Player component
