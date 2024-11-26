@@ -29,8 +29,8 @@ Vue.use(FreecasterPlugin)
 
 ### Player composable
 
-The `usePlayer` composable provide a reactive freecaster player instance given
-an element ref and player options.
+The `usePlayer` composable provide a reactive freecaster player instance
+attached to an element ref.
 
 ```vue
 <script setup lang="ts">
@@ -48,8 +48,8 @@ an element ref and player options.
 </template>
 ```
 
-- [Composable parameters](src/composables/player.ts#L82-L119)
-- [Player options](src/types/Player.ts#L164-L362)
+- [Composable parameters](src/composables/player.ts#L18-L98)
+- [Player options](src/types/Player.ts#L164-L368)
 - [Player instance](src/types/Player.ts#L1-L78)
 
 ### Player component
@@ -59,21 +59,27 @@ It also provides models and slot props for the player state.
 
 ```vue
 <script setup lang="ts">
-  import { FreecasterPlayer } from '@plutotcool/vue-freecaster'
+  import { FreecasterPlayer, type Player } from '@plutotcool/vue-freecaster'
 
-  const muted = ref<boolean>(false)
-  const paused = ref<boolean>(false)
-  const volume = ref<boolean>(1)
-  const currentTime = ref<boolean>(0)
+  const player = shallowRef<Player>()
+  const muted = ref(false)
+  const paused = ref(false)
+  const volume = ref(1)
+  const currentTime = ref(0)
+  const readyState = ref(0)
+  const fullscreen = ref(false)
 </script>
 
 <template>
   <FreecasterPlayer
     video-id="..."
+    v-model="player"
     v-model:muted="muted"
     v-model:paused="paused"
     v-model:volume="volume"
     v-model:current-time="currentTime"
+    v-model:ready-state="readyState"
+    v-model:fullscreen="fullscreen"
   />
 </template>
 ```
@@ -84,13 +90,22 @@ It also provides models and slot props for the player state.
 </script>
 
 <template>
-  <FreecasterPlayer video-id="...">
-    <template #default="{ muted, paused, volume, currentTime }">
-
-    </template>
+  <FreecasterPlayer
+    video-id="..."
+    #default="{
+      player,
+      muted,
+      paused,
+      volume,
+      currentTime,
+      readyState,
+      fullscreen
+    }"
+  >
+    <!-- ... !-->
   </FreecasterPlayer>
 </template>
 ```
 
-- [Component props](src/components/FreecasterPlayer.vue#L6-L10)
-- [Component events](src/components/FreecasterPlayer.vue#L13-L19)
+- [Component props](src/components/FreecasterPlayer.vue#L11-L13)
+- [Component events](src/types/PlayerEvents.vue#L80-L162)

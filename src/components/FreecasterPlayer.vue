@@ -1,35 +1,21 @@
 <script setup lang="ts">
   import {
-    defineProps,
-    defineEmits,
-    computed,
-    watch,
     useAttrs,
-    ref,
+    computed,
     type HTMLAttributes
   } from 'vue'
 
   import { usePlayer } from '../composables/player'
-  import type { PlayerOptions, PlayerEvents } from '../types/Player'
+  import type { Player, PlayerOptions, PlayerEvents } from '../types/Player'
 
   export interface FreecasterPlayerProps extends PlayerOptions {
     class: HTMLAttributes['class']
     enabled?: boolean
-    paused?: boolean
-    currentTime?: number
-    readyState?: number
-  }
-
-  export type FreecasterPlayerEmits = PlayerEvents & {
-    'update:muted': [boolean]
-    'update:paused': [boolean],
-    'update:volume': [number],
-    'update:currentTime': [number]
-    'update:readyState': [number]
   }
 
   export interface FreecasterPlayerSlots {
     default(props: {
+      player: Player | undefined
       paused: boolean
       currentTime: number
       volume: number
@@ -38,153 +24,77 @@
     }): any
   }
 
-  const props = withDefaults(defineProps<FreecasterPlayerProps>(), {
-    muted: false,
-    paused: true,
-    volume: 1,
-    currentTime: 0,
-    readyState: 0
-  })
+  export type FreecasterPlayerEmits = PlayerEvents
 
-  const emit = defineEmits<FreecasterPlayerEmits>()
+  const props = defineProps<FreecasterPlayerProps>()
   const slots = defineSlots<FreecasterPlayerSlots>()
+  const emit = defineEmits<FreecasterPlayerEmits>()
 
-  const muted = ref(props.muted)
-  const paused = ref(props.paused)
-  const volume = ref(props.volume)
-  const currentTime = ref(props.currentTime)
-  const readyState = ref(props.readyState)
-  const key = ref(0)
+  const player = defineModel<Player>()
+  const muted = defineModel<boolean>('muted', { default: false })
+  const paused = defineModel<boolean>('paused', { default: true })
+  const volume = defineModel<number>('volume', { default: 1 })
+  const currentTime = defineModel<number>('currentTime', { default: 0 })
+  const readyState = defineModel<number>('readyState', { default: 0 })
 
-  const options = computed(() => {
-    const {
-      enabled,
-      paused,
-      currentTime,
-      readyState,
-      ...options
-    } = props
-
-    return options
+  defineExpose({
+    player,
+    muted,
+    paused,
+    volume,
+    currentTime,
+    readyState
   })
+
+  const enabled = computed(() => props.enabled)
+  const options = computed(() => ({
+    videoId: props.videoId,
+    height: props.height,
+    width: props.width,
+    preload: props.preload,
+    volume: props.volume,
+    autoplay: props.autoplay,
+    autopause: props.autopause,
+    controls: props.controls,
+    muted: props.muted,
+    loop: props.loop,
+    cast: props.cast,
+    playsinline: props.playsinline,
+    watermarkEnabled: props.watermarkEnabled,
+    lang: props.lang,
+    stats: props.stats,
+    noads: props.noads,
+    thumbnailsSrc: props.thumbnailsSrc,
+    poster: props.poster,
+    stretching: props.stretching,
+    subtitlesDefaultLang: props.subtitlesDefaultLang,
+    subtitlesLang: props.subtitlesLang,
+    subtitlesNative: props.subtitlesNative,
+    floatOnScroll: props.floatOnScroll,
+    multiplay: props.multiplay,
+    chaptersEnabled: props.chaptersEnabled,
+    chaptersStyle: props.chaptersStyle,
+    chaptersList: props.chaptersList,
+    audioOnly: props.audioOnly,
+    trackersGaEnabled: props.trackersGaEnabled,
+    trackersGaTagIds: props.trackersGaTagIds,
+    speedOptions: props.speedOptions,
+    speedLabels: props.speedLabels
+  }))
 
   const attrs = useAttrs()
 
-  const {
-    element,
-    attributes,
-    player,
-  } = usePlayer({
-    enabled: () => props.enabled,
+  const { element, key, attributes } = usePlayer({
+    enabled,
     options,
-    emit,
-    listeners: {
-      onPlay: onPausedchange,
-      onPause: onPausedchange,
-      onTimeupdate,
-      onVolumechange,
-      onLoadeddata
-    }
-  })
-
-  defineExpose({
-    player
-  })
-
-  watch([
     player,
-    () => props.videoId
-  ], (_, [oldPlayer,]) => {
-    if (!oldPlayer) {
-      onPausedchange()
-      onVolumechange()
-    }
-
-    onTimeupdate()
-    onLoadeddata()
+    muted,
+    paused,
+    volume,
+    currentTime,
+    readyState,
+    emit
   })
-
-  watch([
-    () => props.videoId,
-    () => props.enabled
-  ], ([videoId, enabled], [oldVideoId]) => {
-    if (!enabled || (!videoId !== !oldVideoId)) {
-      key.value++
-    }
-  })
-
-  watch([player, () => props.paused], updatePaused)
-  watch([player, () => props.muted], updateMuted)
-  watch([player, () => props.volume], updateVolume)
-  watch([player, () => props.currentTime], updateCurrentTime)
-
-  watch(paused, () => {
-    paused.value === props.paused ||
-    emit('update:paused', paused.value)
-  })
-
-  watch(muted, () => {
-    muted.value === props.muted ||
-    emit('update:muted', muted.value)
-  })
-
-  watch(volume, () => {
-    volume.value === props.volume ||
-    emit('update:volume', volume.value)
-  })
-
-  watch(currentTime, () => {
-    currentTime.value === props.currentTime ||
-    emit('update:currentTime', currentTime.value)
-  })
-
-  watch(readyState, () => {
-    readyState.value === props.readyState ||
-    emit('update:readyState', readyState.value)
-  })
-
-  function updatePaused(): void {
-    if (player.value && player.value.paused !== paused.value) {
-      paused.value ? player.value.pause() : player.value.play()
-    }
-  }
-
-  function updateMuted(): void {
-    if (player.value) {
-      player.value.muted = muted.value
-    }
-  }
-
-  function updateVolume(): void {
-    if (player.value) {
-      player.value.volume = volume.value
-    }
-  }
-
-  function updateCurrentTime(): void {
-    if (player.value) {
-      player.value.currentTime = currentTime.value
-    }
-  }
-
-  function onPausedchange(): void {
-    paused.value = player.value ? player.value.paused : true
-  }
-
-  function onVolumechange(): void {
-    if (player.value) {
-      volume.value = player.value.volume
-      muted.value = player.value.muted
-    }
-  }
-
-  function onTimeupdate(): void {
-    currentTime.value = player.value?.currentTime || 0
-  }
-
-  function onLoadeddata(): void {
-    readyState.value = player.value?.readyState || 0
-  }
 </script>
 
 <template>
@@ -200,10 +110,11 @@
   <slot
     name="default"
     v-bind="{
+      player,
       paused,
-      currentTime,
-      volume,
       muted,
+      volume,
+      currentTime,
       readyState
     }"
   />

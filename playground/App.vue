@@ -1,46 +1,85 @@
 <script setup lang="ts">
   import { ref } from 'vue'
 
-  const mounted = ref(true)
-  const enabled = ref(true)
-
   const ids = [
-    '991850fa-301f-44b2-aa3b-9d69d5a66cc9',
-    '991853bc-8a06-41da-ac6d-f4b1d4a71f21'
+    '9d7afc5d-5d03-4230-a69b-6cd3bec61899',
+    '991853bc-8a06-41da-ac6d-f4b1d4a71f21',
+    '9bee5997-47d7-422f-bfbc-5de00168169a'
   ]
 
+  const mounted = ref(true)
+  const enabled = ref(true)
   const index = ref(0)
+  const id = ref('')
+
+  const paused = ref(false)
+  const muted = ref(true)
+  const currentTime = ref(0)
+  const preview = ref(false)
+
+  function onSubmit(): void {
+    if (!id.value) {
+      index.value = (index.value + 1) % ids.length
+      return
+    }
+
+    const idIndex = ids.indexOf(id.value)
+    index.value = idIndex >= 0 ? idIndex : ids.push(id.value) - 1
+  }
 </script>
 
 <template>
   <main>
     <h1>vue-freecaster</h1>
     <div>
-      <button @click="mounted = !mounted">
-        {{ mounted ? 'unmount' : 'mount' }}
-      </button>
-      <button @click="enabled = !enabled">
-        {{ enabled ? 'disable' : 'enable' }}
-      </button>
-      <button @click="index = (index + 1) % ids.length">
-        {{ index < 0 ? 'load' : 'reload' }}
-      </button>
-      <button :disabled="index < 0" @click="index = -1">
-        unload
-      </button>
+      <form @submit.prevent="onSubmit">
+        <button type="button" @click="mounted = !mounted">
+          {{ mounted ? 'unmount' : 'mount' }}
+        </button>
+        <button type="button" @click="enabled = !enabled">
+          {{ enabled ? 'disable' : 'enable' }}
+        </button>
+        <button
+          type="submit"
+          @mouseenter="preview = true"
+          @mouseleave="preview = false"
+        >
+          load
+        </button>
+        <input
+          v-model="id"
+          :placeholder="!preview ? 'video id' : ids[(index + 1) % ids.length]"
+        />
+      </form>
     </div>
     <div>
       <FreecasterPlayer
         v-if="mounted"
         class="player"
-        :video-id="index < 0 ? undefined : ids[index]"
+        :video-id="ids[index]"
         :enabled="enabled"
         controls
         autoplay
+        #default="state"
+        v-model:paused="paused"
+        v-model:muted="muted"
+        v-model:current-time="currentTime"
       >
-        <template #default="values">
-          <pre>{{ values }}</pre>
-        </template>
+        <div class="controls">
+          <button @click="paused = !paused">
+            {{ paused ? 'play' : 'pause' }}
+          </button>
+          <button @click="muted = !muted">
+            {{ muted ? 'unmute' : 'mute' }}
+          </button>
+          <button @click="currentTime -= 5">
+            backward
+          </button>
+          <button @click="currentTime += 5">
+            forward
+          </button>
+        </div>
+        <pre>{{ state }}</pre>
       </FreecasterPlayer>
     </div>
     <div>
@@ -48,7 +87,7 @@
         target="_blank"
         href="https://github.com/plutotcool/vue-freecaster"
       >
-        github repository
+        github
       </a>
     </div>
   </main>
@@ -68,15 +107,38 @@
     font-size: 2em;
   }
 
-  main > div:not(:last-child) {
-    margin-bottom: 20px;
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    position: relative;
   }
 
-  pre, pre::before, button, button::before, .player {
+  form button {
+    flex-grow: 1;
+  }
+
+  form div {
+    min-width: 240px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 50%;
+  }
+
+  main > div:not(:last-child) {
+    margin-bottom: 10px;
+  }
+
+  pre, pre::before, button, button::before, input, .player {
     border-radius: 10px;
   }
 
-  pre, button {
+  pre, button, input {
     position: relative;
   }
 
@@ -94,18 +156,26 @@
     transition: opacity .3s, transform .3s;
   }
 
-  button {
+  button, input {
     background: transparent;
     appearance: none;
     border: none;
-    margin: 10px 10px 0 0;
     font: inherit;
     padding: 15px 20px;
-    min-width: 130px;
     outline: none;
-    cursor: pointer;
-    -webkit-user-select: none;
     user-select: none;
+  }
+
+  button {
+    min-width: 110px;
+    cursor: pointer;
+  }
+
+  input {
+    background-color: #e9e9e9b3;
+    flex-grow: 1;
+    flex-shrink: 1;
+    color: #0000ff;
   }
 
   button:not([disabled]):active::before {
@@ -121,12 +191,31 @@
   .player {
     position: relative;
     margin: 0;
-    display: block;
+    display: block !important;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: 10px;
+    position: relative;
+
+    button {
+      flex-grow: 1;
+    }
   }
 
   pre {
     padding: 25px;
-    margin: 20px 0 0 0;
+    margin: 10px 0 0 0;
+    overflow: hidden;
+  }
+
+  a {
+    color: #0000ff;
   }
 
   @media (hover: hover) {

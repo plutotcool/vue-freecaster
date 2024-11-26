@@ -118,7 +118,7 @@ export type PlayerEvents = {
   /**
    * Fired when the player exits fullscreen
    */
-  fullscreenxit: [event: Event]
+  fullscreenexit: [event: Event]
 
   /**
    * Fired when the player is viewable in the browser viewport
@@ -218,7 +218,7 @@ export interface PlayerOptions {
 
   /**
    * Enable/disable sound.
-   * @default false
+   * @default false, always true when autoplay is enabled
    */
   muted?: boolean
 
@@ -233,6 +233,12 @@ export interface PlayerOptions {
    * @default false
    */
   cast?:  boolean
+
+  /**
+   * Enable/disable inline playback on iOS.
+   * @default true
+   */
+  playsinline?: boolean
 
   /**
    * Enable/disable the watermark.
