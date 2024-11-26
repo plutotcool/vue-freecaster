@@ -53,16 +53,16 @@ export type UsePlayerParameters = {
   currentTime?: Ref<number>
 
   /**
+   * Optional fullscreen model that reads and controls the player state
+   * @default undefined
+   */
+  fullscreen?: Ref<boolean>
+
+  /**
    * Optional readyState model that only reads the player state
    * @default undefined
    */
   readyState?: Ref<number>
-
-  /**
-   * Optional fullscreen model that only reads the player state
-   * @default undefined
-   */
-  fullscreen?: Ref<boolean>
 
   /**
    * Optional player model returned by the composable, fallbacks to an empty ref
@@ -130,8 +130,8 @@ export function usePlayer({
   useVolume(context)
   usePaused(context)
   useCurrentTime(context)
-  useReadyState(context)
   useFullscreen(context)
+  useReadyState(context)
   useListeners(context)
   useAttributes(context)
   useKey(context)
@@ -480,30 +480,6 @@ function useCurrentTime({
   })
 }
 
-function useReadyState({
-  listeners,
-  player,
-  options,
-  readyState
-}: UsePlayerContext): void {
-  if (!readyState) {
-    return
-  }
-
-  const { onLoadeddata: listener } = listeners
-
-  const update = () => {
-    readyState.value = player.value ? player.value.readyState : 0
-  }
-
-  listeners.onLoadeddata = !listener ? update : (event: Event) => {
-    update()
-    listener(event)
-  }
-
-  watch([player, () => options.value?.videoId], update)
-}
-
 function useFullscreen({
   listeners,
   player,
@@ -550,22 +526,28 @@ function useFullscreen({
   })
 }
 
-function useChaptersListPatch({
+function useReadyState({
   listeners,
-  player
+  player,
+  options,
+  readyState
 }: UsePlayerContext): void {
-  const update = () => {
-    if (player.value && !Array.isArray(player.value.config.chapters.list)) {
-      player.value.config.chapters.list = []
-    }
+  if (!readyState) {
+    return
   }
 
-  const { onFcplayerSrcChanged: listener } = listeners
+  const { onLoadeddata: listener } = listeners
 
-  listeners.onFcplayerSrcChanged = !listener ? update : (event: Event) => {
+  const update = () => {
+    readyState.value = player.value ? player.value.readyState : 0
+  }
+
+  listeners.onLoadeddata = !listener ? update : (event: Event) => {
     update()
     listener(event)
   }
+
+  watch([player, () => options.value?.videoId], update)
 }
 
 function useAttributes({
@@ -594,6 +576,24 @@ function useKey({
       key.value++
     }
   })
+}
+
+function useChaptersListPatch({
+  listeners,
+  player
+}: UsePlayerContext): void {
+  const update = () => {
+    if (player.value && !Array.isArray(player.value.config.chapters.list)) {
+      player.value.config.chapters.list = []
+    }
+  }
+
+  const { onFcplayerSrcChanged: listener } = listeners
+
+  listeners.onFcplayerSrcChanged = !listener ? update : (event: Event) => {
+    update()
+    listener(event)
+  }
 }
 
 function resolveAttributes(options: PlayerOptions = {}): PlayerAttributes {
