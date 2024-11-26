@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v1.3.0
+
+
+### 🚀 Enhancements
+
+- Models api ([6b51c07](https://github.com/plutotcool/vue-freecaster/commit/6b51c07))
+
+### ❤️ Contributors
+
+- Julien Dargelos <hello@julien.gl>
+
 ## v1.2.1
 
 
