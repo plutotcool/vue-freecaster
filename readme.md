@@ -49,7 +49,7 @@ attached to an element ref.
 </template>
 ```
 
-- [Composable parameters](https://plutotcool.github.io/vue-freecaster/types/usePlayer.UsePlayerParameters.html)
+- [Composable parameters](https://plutotcool.github.io/vue-freecaster/interfaces/usePlayer.UsePlayerParameters.html)
 - [Player options](https://plutotcool.github.io/vue-freecaster/interfaces/Player.PlayerOptions.html)
 - [Player instance](https://plutotcool.github.io/vue-freecaster/interfaces/Player.Player.html)
 
