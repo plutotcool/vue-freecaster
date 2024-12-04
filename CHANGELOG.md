@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v1.4.1
+
+
+### 🩹 Fixes
+
+- Add missing build step before doc ([dd37355](https://github.com/plutotcool/vue-freecaster/commit/dd37355))
+
+### ❤️ Contributors
+
+- Julien Dargelos <hello@julien.gl>
+
 ## v1.4.0
 
 
