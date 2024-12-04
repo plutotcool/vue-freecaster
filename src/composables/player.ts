@@ -107,14 +107,15 @@ interface UsePlayerContext extends UsePlayerParameters {
   key: Ref<number>
 }
 
-export function usePlayer({
-  element,
-  options,
-  enabled,
-  player,
-  listeners = {},
-  ...parameters
-}: UsePlayerParameters = {}): UsePlayerContext {
+export function usePlayer(parameters: UsePlayerParameters = {}): UsePlayerContext {
+  const {
+    element,
+    options,
+    enabled,
+    player,
+    listeners = {}
+  } = parameters
+
   const context: UsePlayerContext = {
     ...parameters,
     listeners,

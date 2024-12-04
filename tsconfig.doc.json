@@ -1,0 +1,7 @@
+{
+  "files": [],
+  "extends": "./tsconfig.lib.json",
+  "include": [
+    "dist/**/*.d.ts"
+  ]
+}

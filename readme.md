@@ -2,8 +2,9 @@
 
 Freecaster video player integration for vue.
 
-- [See demo](https://plutotcool.github.io/vue-freecaster)
-- [Freecaster player documentation](https://docs.freecaster.com/player/index.html)
+- [Demo](https://plutotcool.github.io/vue-freecaster/playground)
+- [Documentation](https://plutotcool.github.io/vue-freecaster)
+- [Freecaster documentation](https://docs.freecaster.com/player/index.html)
 
 ## Installation
 
@@ -49,8 +50,8 @@ attached to an element ref.
 ```
 
 - [Composable parameters](src/composables/player.ts#L18-L98)
-- [Player options](src/types/Player.ts#L164-L368)
-- [Player instance](src/types/Player.ts#L1-L78)
+- [Player options](src/types/Player.ts#L168-L372)
+- [Player instance](src/types/Player.ts#L5-L82)
 
 ### Player component
 
@@ -107,5 +108,6 @@ It also provides models and slot props for the player state.
 </template>
 ```
 
-- [Component props](src/components/FreecasterPlayer.vue#L11-L13)
-- [Component events](src/types/PlayerEvents.vue#L80-L162)
+- [Component props](src/components/FreecasterPlayer.vue#L6-L8)
+- [Component slots](src/components/FreecasterPlayer.vue#L10-19)
+- [Component events](src/types/PlayerEvents.vue#L84-L166)

@@ -1,3 +1,7 @@
+/**
+ * @module Plugin
+ */
+
 import type { Plugin } from 'vue'
 import FreecasterPlayer from './components/FreecasterPlayer.vue'
 
@@ -8,23 +12,25 @@ export interface FreecasterPluginOptions {
   /**
    * Load the freecaster player script if not already loaded. Can be set to
    * true, a custom url, or false to disable loading the script.
-   * @default true ('https://player.freecaster.com/freecaster/stable/fcplayer.js')
+   * @default 'https://player.freecaster.com/freecaster/stable/fcplayer.js'
    */
   script?: boolean | string
 
   /**
    * Register the freecaster player component globally. Can be set to true,
    * a custom component name, or false to disable registering the component.
-   * @default true ('FreecasterPlayer')
+   * @default 'FreecasterPlayer'
    */
   component?: boolean | string
 }
 
 export const FreecasterPlugin = {
-  async install(app, {
-    script = true,
-    component = true
-  } = {}) {
+  async install(app, options: FreecasterPluginOptions = {}) {
+    let {
+      script = true,
+      component = true
+    } = options
+
     if (script === true) {
       script = DEFAULT_SCRIPT
     }

@@ -1,3 +1,7 @@
+/**
+ * @module Player
+ */
+
 export interface Player extends HTMLVideoElement {
   /**
    * Returns a string containing the current timecode
@@ -204,7 +208,7 @@ export interface PlayerOptions {
   autoplay?:  boolean
 
   /**
-   * Enabled/disabled the automatic pause when the player is no longer visible
+   * Enable/disable the automatic pause when the player is no longer visible
    * in the viewport.
    * @default true
    */

@@ -1,15 +1,9 @@
 <script setup lang="ts">
-  import {
-    useAttrs,
-    computed,
-    type HTMLAttributes
-  } from 'vue'
-
+  import { useAttrs, computed } from 'vue'
   import { usePlayer } from '../composables/player'
   import type { Player, PlayerOptions, PlayerEvents } from '../types/Player'
 
   export interface FreecasterPlayerProps extends PlayerOptions {
-    class: HTMLAttributes['class']
     enabled?: boolean
   }
 
@@ -100,12 +94,14 @@
 <template>
   <div
     ref="element"
-    :key="key"
-    :class="props.class"
     v-bind="{
       ...attrs,
       ...attributes
     }"
+    :class="[
+      attrs.class,
+      attributes.class
+    ].filter(Boolean)"
   />
   <slot
     name="default"

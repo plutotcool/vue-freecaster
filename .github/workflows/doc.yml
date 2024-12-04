@@ -4,10 +4,11 @@ on:
     - main
 
 jobs:
-  deploy:
+  doc:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
       - uses: actions/checkout@v4
       - run: corepack enable
@@ -16,11 +17,8 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install
-      - run: pnpm build
-        env:
-          PLAYGROUND: true
-          BASE_URL: /${{ github.event.repository.name }}
+      - run: pnpm doc
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./playground/dist
+          publish_dir: ./doc

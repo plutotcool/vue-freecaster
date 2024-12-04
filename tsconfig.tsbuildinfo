@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/plugin.ts","./src/composables/player.ts","./src/types/player.ts","./src/types/global.d.ts","./src/components/freecasterplayer.vue","./playground/index.ts","./playground/vite-env.d.ts","./playground/app.vue"],"errors":true,"version":"5.6.3"}

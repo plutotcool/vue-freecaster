@@ -30,10 +30,13 @@
     "dist"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "dev": "vite --config vite.playground.config.ts",
+    "build": "vite build",
     "preview": "vite preview",
-    "release": "changelogen --release --push --publish"
+    "release": "changelogen --release --push --publish",
+    "doc": "typedoc",
+    "doc:serve": "typedoc --watch & serve doc",
+    "postdoc": "vite build --config vite.playground.config.ts"
   },
   "peerDependencies": {
     "vue": "^3.5.12"
@@ -42,6 +45,10 @@
     "@types/node": "^22.9.1",
     "@vitejs/plugin-vue": "^5.1.4",
     "changelogen": "^0.5.7",
+    "serve": "^14.2.4",
+    "typedoc": "^0.26.11",
+    "typedoc-github-theme": "^0.1.2",
+    "typedoc-plugin-vue": "^1.3.0",
     "typescript": "~5.6.2",
     "vite": "^5.4.10",
     "vite-plugin-dts": "^4.3.0",
