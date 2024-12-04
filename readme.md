@@ -26,7 +26,7 @@ import { FreecasterPlugin } from '@plutotcool/vue-freecaster'
 Vue.use(FreecasterPlugin)
 ```
 
-- [Plugin options](src/plugin.ts#L7-L21)
+- [Plugin options](https://plutotcool.github.io/vue-freecaster/interfaces/Plugin.FreecasterPluginOptions.html)
 
 ### Player composable
 
@@ -49,9 +49,9 @@ attached to an element ref.
 </template>
 ```
 
-- [Composable parameters](src/composables/player.ts#L18-L98)
-- [Player options](src/types/Player.ts#L168-L372)
-- [Player instance](src/types/Player.ts#L5-L82)
+- [Composable parameters](https://plutotcool.github.io/vue-freecaster/types/usePlayer.UsePlayerParameters.html)
+- [Player options](https://plutotcool.github.io/vue-freecaster/interfaces/Player.PlayerOptions.html)
+- [Player instance](https://plutotcool.github.io/vue-freecaster/interfaces/Player.Player.html)
 
 ### Player component
 
@@ -108,6 +108,6 @@ It also provides models and slot props for the player state.
 </template>
 ```
 
-- [Component props](src/components/FreecasterPlayer.vue#L6-L8)
-- [Component slots](src/components/FreecasterPlayer.vue#L10-19)
-- [Component events](src/types/PlayerEvents.vue#L84-L166)
+- [Component props](https://plutotcool.github.io/vue-freecaster/interfaces/_FreecasterPlayer__.FreecasterPlayerProps.html)
+- [Component slots](https://plutotcool.github.io/vue-freecaster/interfaces/_FreecasterPlayer__.FreecasterPlayerSlots.html)
+- [Component events](https://plutotcool.github.io/vue-freecaster/types/_FreecasterPlayer__.FreecasterPlayerEmits.html)
