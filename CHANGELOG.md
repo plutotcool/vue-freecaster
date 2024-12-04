@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v1.4.0
+
+
+### 🚀 Enhancements
+
+- Documentation ([50640c3](https://github.com/plutotcool/vue-freecaster/commit/50640c3))
+
+### ❤️ Contributors
+
+- Julien Dargelos <hello@julien.gl>
+
 ## v1.3.1
 
 ## v1.3.0
