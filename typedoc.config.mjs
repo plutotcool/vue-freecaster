@@ -15,6 +15,9 @@ export default {
     'typedoc-plugin-vue',
     'typedoc-github-theme'
   ],
+  navigationLinks: {
+    'GitHub repository': 'https://github.com/plutotcool/vue-freecaster'
+  },
   highlightLanguages: [
     'typescript',
     'javascript',
