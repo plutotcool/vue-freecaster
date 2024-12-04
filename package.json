@@ -36,6 +36,7 @@
     "release": "changelogen --release --push --publish",
     "doc": "typedoc",
     "doc:serve": "typedoc --watch & serve doc",
+    "predoc": "vite build",
     "postdoc": "vite build --config vite.playground.config.ts"
   },
   "peerDependencies": {
