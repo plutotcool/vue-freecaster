@@ -15,7 +15,7 @@ import type { Player, PlayerOptions, PlayerEvents } from '../types/Player'
 
 type PlayerAttributes = HTMLAttributes & Record<string, string>
 
-export type UsePlayerParameters = {
+export interface UsePlayerParameters {
   /**
    * Freecaster player options
    * @default undefined
