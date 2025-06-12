@@ -41,6 +41,18 @@ export interface UsePlayerParameters {
   muted?: Ref<boolean>
 
   /**
+   * Optional currentSubtitles model that reads and controls the player state
+   * @default undefined
+   */
+  currentSubtitles?: Ref<TextTrack | undefined>
+
+  /**
+   * Optional subtitles model that only reads the player state
+   * @default undefined
+   */
+  subtitles?: Ref<TextTrack[]>
+
+  /**
    * Optional volume model that reads and controls the player state
    * @default undefined
    */
@@ -97,7 +109,7 @@ export interface UsePlayerParameters {
   }
 }
 
-interface UsePlayerContext extends UsePlayerParameters {
+export interface UsePlayerContext extends UsePlayerParameters {
   listeners: Required<UsePlayerParameters>['listeners']
   options: Ref<PlayerOptions | undefined>
   enabled: Ref<boolean | undefined>
@@ -132,6 +144,7 @@ export function usePlayer(parameters: UsePlayerParameters = {}): UsePlayerContex
   usePaused(context)
   useCurrentTime(context)
   useFullscreen(context)
+  useSubtitles(context)
   useReadyState(context)
   useListeners(context)
   useAttributes(context)
@@ -202,6 +215,7 @@ const EVENTS: (keyof PlayerEvents)[] = [
   'viewleave',
   'fcplayerDestroy',
   'fcplayerSrcChanged',
+  'fcplayerConfigChanged',
   'fcplayerCountdownTick',
   'fcplayerCountdownEnabled',
   'fcplayerCountdownDisabled',
@@ -311,14 +325,13 @@ function useListeners({
     return
   }
 
-  const defaultListener = ((event: Event) => emit(<any>event.type, event))
-
   for (const event of EVENTS) {
     const name = listenerName(event)
+    const defaultListener = (e: any) => emit(event, e)
     const listener = listeners[name]
 
-    listeners[name] = !listener ? defaultListener : (event: Event) => {
-      listener(<any>event)
+    ;(listeners as any)[name] = !listener ? defaultListener : (event: any) => {
+      listener(event)
       defaultListener(event)
     }
   }
@@ -409,12 +422,12 @@ function useVolume({
     }
   }
 
-  listeners.onFcplayerSrcChanged = !resetListener ? reset : (event: Event) => {
+  listeners.onFcplayerSrcChanged = !resetListener ? reset : (event) => {
     reset()
     resetListener(event)
   }
 
-  listeners.onVolumechange = !listener ? update : (event: Event) => {
+  listeners.onVolumechange = !listener ? update : (event) => {
     update()
     listener(event)
   }
@@ -462,7 +475,7 @@ function useCurrentTime({
     currentTime.value = value
   }
 
-  listeners.onTimeupdate = !listener ? update : (event: Event) => {
+  listeners.onTimeupdate = !listener ? update : (event) => {
     update()
     listener(event)
   }
@@ -507,14 +520,14 @@ function useFullscreen({
     fullscreen.value = false
   }
 
-  listeners.onFullscreenenter = !enterListener ? enter : (event: Event) => {
+  listeners.onFullscreenenter = !enterListener ? enter : () => {
     enter()
-    enterListener(event)
+    enterListener()
   }
 
-  listeners.onFullscreenexit = !exitListener ? exit : (event: Event) => {
+  listeners.onFullscreenexit = !exitListener ? exit : () => {
     exit()
-    exitListener(event)
+    exitListener()
   }
 
   watch([fullscreen, player], ([fullscreen, player]) => {
@@ -524,6 +537,43 @@ function useFullscreen({
     }
 
     fullscreen ? player?.requestFullscreen() : document?.exitFullscreen()
+  })
+}
+
+function useSubtitles({
+  player,
+  subtitles,
+  currentSubtitles
+}: UsePlayerContext): void {
+  if (!subtitles && !currentSubtitles) {
+    return
+  }
+
+  const update = () => {
+    const tracks: TextTrack[] = !player?.value.textTracks.length ? [] : Array
+      .from(player?.value.textTracks)
+      .filter(track => track.kind === 'subtitles')
+
+    if (subtitles && (
+      subtitles.value.length !== tracks.length ||
+      subtitles.value.some((track, i) => track !== tracks[i])
+    )) {
+      subtitles.value = tracks
+    }
+
+    if (currentSubtitles) {
+      currentSubtitles.value = tracks.find(track => track.mode !== 'disabled')
+    }
+  }
+
+  watch(player, (player, oldPlayer) => {
+    oldPlayer?.textTracks.removeEventListener('addtrack', update)
+    oldPlayer?.textTracks.removeEventListener('removetrack', update)
+    oldPlayer?.textTracks.removeEventListener('change', update)
+    player?.textTracks.addEventListener('addtrack', update)
+    player?.textTracks.addEventListener('removetrack', update)
+    player?.textTracks.addEventListener('change', update)
+    update()
   })
 }
 
@@ -543,7 +593,7 @@ function useReadyState({
     readyState.value = player.value ? player.value.readyState : 0
   }
 
-  listeners.onLoadeddata = !listener ? update : (event: Event) => {
+  listeners.onLoadeddata = !listener ? update : (event) => {
     update()
     listener(event)
   }
@@ -591,7 +641,7 @@ function useChaptersListPatch({
 
   const { onFcplayerSrcChanged: listener } = listeners
 
-  listeners.onFcplayerSrcChanged = !listener ? update : (event: Event) => {
+  listeners.onFcplayerSrcChanged = !listener ? update : (event) => {
     update()
     listener(event)
   }

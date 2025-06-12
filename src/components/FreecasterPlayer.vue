@@ -11,10 +11,13 @@
     default(props: {
       player: Player | undefined
       paused: boolean
+      muted: boolean
+      fullscreen: boolean
       currentTime: number
       volume: number
-      muted: boolean
       readyState: number
+      currentSubtitles: TextTrack | undefined
+      subtitles: TextTrack[]
     }): any
   }
 
@@ -25,19 +28,25 @@
   const emit = defineEmits<FreecasterPlayerEmits>()
 
   const player = defineModel<Player>()
-  const muted = defineModel<boolean>('muted', { default: false })
   const paused = defineModel<boolean>('paused', { default: true })
+  const muted = defineModel<boolean>('muted', { default: false })
+  const fullscreen = defineModel<boolean>('fullscreen', { default: false })
   const volume = defineModel<number>('volume', { default: 1 })
   const currentTime = defineModel<number>('currentTime', { default: 0 })
   const readyState = defineModel<number>('readyState', { default: 0 })
+  const currentSubtitles = defineModel<TextTrack>('currentSubtitles')
+  const subtitles = defineModel<TextTrack[]>('subtitles', { default: [] })
 
   defineExpose({
     player,
-    muted,
     paused,
+    muted,
+    fullscreen,
     volume,
     currentTime,
-    readyState
+    readyState,
+    currentSubtitles,
+    subtitles
   })
 
   const enabled = computed(() => props.enabled)
@@ -82,12 +91,15 @@
     enabled,
     options,
     player,
-    muted,
     paused,
+    muted,
+    fullscreen,
     volume,
     currentTime,
     readyState,
-    emit
+    emit,
+    currentSubtitles,
+    subtitles,
   })
 </script>
 
@@ -109,9 +121,12 @@
       player,
       paused,
       muted,
+      fullscreen,
       volume,
       currentTime,
-      readyState
+      readyState,
+      currentSubtitles,
+      subtitles
     }"
   />
 </template>

@@ -69,6 +69,8 @@ It also provides models and slot props for the player state.
   const currentTime = ref(0)
   const readyState = ref(0)
   const fullscreen = ref(false)
+  const subtitles = ref<TextTrack[]>([])
+  const currentSubtitles = ref<TextTrack>()
 </script>
 
 <template>
@@ -81,6 +83,8 @@ It also provides models and slot props for the player state.
     v-model:current-time="currentTime"
     v-model:ready-state="readyState"
     v-model:fullscreen="fullscreen"
+    v-model:subtitles="subtitles"
+    v-model:current-subtitles="currentSubtitles"
   />
 </template>
 ```
@@ -100,7 +104,9 @@ It also provides models and slot props for the player state.
       volume,
       currentTime,
       readyState,
-      fullscreen
+      fullscreen,
+      subtitles,
+      currentSubtitles
     }"
   >
     <!-- ... !-->

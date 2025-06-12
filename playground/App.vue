@@ -1,7 +1,9 @@
 <script setup lang="ts">
   import { ref } from 'vue'
+  import type { FreecasterPlayerSlots } from '../src'
 
   const ids = [
+    '9ab90057-8d0f-409d-b89c-5213581454e3',
     '9d7afc5d-5d03-4230-a69b-6cd3bec61899',
     '991853bc-8a06-41da-ac6d-f4b1d4a71f21',
     '9bee5997-47d7-422f-bfbc-5de00168169a'
@@ -25,6 +27,52 @@
 
     const idIndex = ids.indexOf(id.value)
     index.value = idIndex >= 0 ? idIndex : ids.push(id.value) - 1
+  }
+
+  function formatObject(
+    object: Record<string | number, any>,
+    indentation: number = 0
+  ): string {
+    const array = Array.isArray(object)
+    const padding = '  '.repeat(indentation + 1)
+    const keys = Object.getOwnPropertyNames(object)
+    let formatted = ''
+
+    for (const key in object) {
+      let value = object[key]
+
+      formatted += `,\n${padding}${array ? '' : `${key}: `}`
+
+      if (value instanceof TextTrack) {
+        value = {
+          id: value.id,
+          kind: value.kind,
+          language: value.language,
+          label: value.label,
+          mode: value.mode
+        }
+      }
+
+      if (typeof value === 'string') {
+        formatted  += JSON.stringify(value)
+      }  else if (Array.isArray(value) || value?.constructor === Object) {
+        formatted += formatObject(value, indentation + 1)
+      } else {
+        formatted += `${value}`
+      }
+    }
+
+    formatted = `${
+      array ? '[' : '{'
+    }${
+      formatted.slice(1)
+    }\n${
+      '  '.repeat(indentation)
+    }${
+      array ? ']' : '}'
+    }`
+
+    return formatted
   }
 </script>
 
@@ -60,6 +108,7 @@
         :enabled="enabled"
         controls
         autoplay
+        subtitles-default-lang="fr"
         #default="state"
         v-model:paused="paused"
         v-model:muted="muted"
@@ -79,7 +128,7 @@
             forward
           </button>
         </div>
-        <pre>{{ state }}</pre>
+        <pre>{{ formatObject(state) }}</pre>
       </FreecasterPlayer>
     </div>
     <div>

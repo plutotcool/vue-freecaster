@@ -2,6 +2,11 @@
  * @module Player
  */
 
+/**
+ * Freecaster player interface
+ * @see [Player properties (API) - Freecaster documentation](https://docs.freecaster.com/player/index.html#player-properties-api)
+ * @see [Player methods (API) - Freecaster documentation](https://docs.freecaster.com/player/index.html#player-methods-api)
+ */
 export interface Player extends HTMLVideoElement {
   /**
    * Returns a string containing the current timecode
@@ -19,6 +24,11 @@ export interface Player extends HTMLVideoElement {
    * Whether the video is a live feed
    */
   live: boolean
+
+  /**
+   * Whether subtitles/captions are currently enabled on the player
+   */
+  subtitlesEnabled: boolean
 
   /**
    * Player's container HTMLElement
@@ -66,8 +76,9 @@ export interface Player extends HTMLVideoElement {
 
   /**
    * Toggle play/pause mode
+   * @param force Optional boolean forces state (true=play, false=pause)
    */
-  togglePlay(): void
+  togglePlay(force?: boolean): void
 
   /**
    * Replaces the current source
@@ -79,9 +90,25 @@ export interface Player extends HTMLVideoElement {
    * Seek closer to live
    */
   goBackToLive(): void
+
+  /**
+   * Mute or unmute the player
+   * @param shouldMute Whether the player should be muted or not
+   */
+  mute(shouldMute: boolean): void
+
+  /**
+   * Set the volume
+   * @param level Volume between 0 et 1
+   */
+  setVolume(level: number): void
 }
 
-export type PlayerEvents = {
+/**
+ * Freecaster player events
+ * @see [Events - Freecaster documentation](https://docs.freecaster.com/player/index.html#events)
+ */
+export interface PlayerEvents {
   // Standard video events
   abort: [event: Event]
   canplay: [event: Event]
@@ -117,54 +144,63 @@ export type PlayerEvents = {
   /**
    * Fired when the player enters fullscreen
    */
-  fullscreenenter: [event: Event]
+  fullscreenenter: []
 
   /**
    * Fired when the player exits fullscreen
    */
-  fullscreenexit: [event: Event]
+  fullscreenexit: []
 
   /**
    * Fired when the player is viewable in the browser viewport
    */
-  viewenter: [event: Event]
+  viewenter: []
 
   /**
    * Fired when the player is not viewable anymore in the browser viewport
    */
-  viewleave: [event: Event]
+  viewleave: []
 
   /**
    * Fired when the player instance is destroyed
    */
-  fcplayerDestroy: [event: Event]
+  fcplayerDestroy: []
 
   /**
    * Fired when the video source has changed
    */
-  fcplayerSrcChanged: [event: Event]
+  fcplayerSrcChanged: [event: { src: any }]
+
+  fcplayerConfigChanged: [event: (
+    { key: string, value: any } |
+    { changes: { [key: string]: any } }
+  )]
 
   /**
    * Fired each countdown seconds
    */
-  fcplayerCountdownTick: [event: Event]
+  fcplayerCountdownTick: [event: { remaining: number }]
 
   /**
    * Fired when the countdown is enabled
    */
-  fcplayerCountdownEnabled: [event: Event]
+  fcplayerCountdownEnabled: []
 
   /**
    * Fired when the countdown is disabled
    */
-  fcplayerCountdownDisabled: [event: Event]
+  fcplayerCountdownDisabled: []
 
   /**
    * Fired when the countdown is over
    */
-  fcplayerCountdownZero: [event: Event]
+  fcplayerCountdownZero: []
 }
 
+/**
+ * Freecaster player options
+ * @see [Configuring the player - Freecaster documentation](https://docs.freecaster.com/player/index.html#configuring-the-player)
+ */
 export interface PlayerOptions {
   /**
    * ID of the video
