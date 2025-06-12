@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v1.5.0
+
+
+### 🚀 Enhancements
+
+- Add support for subtitles and fullscreen model ([93b958b](https://github.com/plutotcool/vue-freecaster/commit/93b958b))
+
+### ❤️ Contributors
+
+- Julien Dargelos <hello@julien.gl>
+
 ## v1.4.4
 
 ## v1.4.3
