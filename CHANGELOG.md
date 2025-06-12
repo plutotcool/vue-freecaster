@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v1.5.1
+
+
+### 🩹 Fixes
+
+- Current subtitles model binding ([3feeca0](https://github.com/plutotcool/vue-freecaster/commit/3feeca0))
+
+### ❤️ Contributors
+
+- Julien Dargelos <hello@julien.gl>
+
 ## v1.5.0
 
 
