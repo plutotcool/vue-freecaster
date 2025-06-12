@@ -549,15 +549,19 @@ function useSubtitles({
     return
   }
 
+  if (!subtitles) {
+    subtitles = shallowRef<TextTrack[]>([])
+  }
+
   const update = () => {
     const tracks: TextTrack[] = !player?.value.textTracks.length ? [] : Array
       .from(player?.value.textTracks)
       .filter(track => track.kind === 'subtitles')
 
-    if (subtitles && (
+    if (
       subtitles.value.length !== tracks.length ||
       subtitles.value.some((track, i) => track !== tracks[i])
-    )) {
+    ) {
       subtitles.value = tracks
     }
 
@@ -565,6 +569,20 @@ function useSubtitles({
       currentSubtitles.value = tracks.find(track => track.mode !== 'disabled')
     }
   }
+
+  currentSubtitles && watch(currentSubtitles, (currentSubtitles) => {
+    for (const track of subtitles.value) {
+      if (currentSubtitles === track) {
+        (currentSubtitles as any).is_active = true
+        currentSubtitles.mode = player.value?.config.subtitles.native
+          ? 'showing'
+          : 'hidden'
+      } else {
+        (track as any).is_active = false
+        track.mode = 'disabled'
+      }
+    }
+  })
 
   watch(player, (player, oldPlayer) => {
     oldPlayer?.textTracks.removeEventListener('addtrack', update)
@@ -664,3 +682,4 @@ function resolveAttributes(options: PlayerOptions = {}): PlayerAttributes {
 function listenerName<T extends string>(name: T) {
   return `on${name[0].toUpperCase()}${name.slice(1)}` as `on${Capitalize<T>}`
 }
+export type { Player, PlayerOptions, PlayerEvents }
