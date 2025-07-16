@@ -1,6 +1,21 @@
 # Changelog
 
 
+## v2.0.0
+
+
+### 🚀 Enhancements
+
+- ⚠️  Remove unstable `enabled` option, add compatibility with custom elements ([da65411](https://github.com/plutotcool/vue-freecaster/commit/da65411))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Remove unstable `enabled` option, add compatibility with custom elements ([da65411](https://github.com/plutotcool/vue-freecaster/commit/da65411))
+
+### ❤️ Contributors
+
+- Juliendargelos <hello@julien.gl>
+
 ## v1.5.1
 
 
