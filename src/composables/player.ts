@@ -289,12 +289,8 @@ function useLifecycle({
     }
   }
 
-  watch([() => options.value?.videoId], ([videoId]) => {
-    if (!videoId) {
-      remove(context)
-    } else {
-      context.player.value?.loadVideo(videoId)
-    }
+  watch([context.player, () => options.value?.videoId], ([player, videoId]) => {
+    player && videoId && player.loadVideo(videoId)
   })
 
   watch([
