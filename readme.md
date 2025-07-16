@@ -117,3 +117,38 @@ It also provides models and slot props for the player state.
 - [Component props](https://plutotcool.github.io/vue-freecaster/interfaces/_FreecasterPlayer__.FreecasterPlayerProps.html)
 - [Component slots](https://plutotcool.github.io/vue-freecaster/interfaces/_FreecasterPlayer__.FreecasterPlayerSlots.html)
 - [Component events](https://plutotcool.github.io/vue-freecaster/types/_FreecasterPlayer__.FreecasterPlayerEmits.html)
+
+### Custom elements
+
+Out of the box, the freecaster player does not work well inside web components,
+there are especially two issues to overcome:
+
+> Automatic player initialization relies on the behavior of
+> `document.getElementsByClassName('freecaster-player')` which doesn't select
+> elements through shadow doms.
+
+> [!TIP]
+> vue-freecaster handles initialization by explicitly calling the global
+> `window.fcload` method on the player element.
+
+<br>
+
+> The player stylesheets are included using top-level `<link>` elements in the
+> `<head>`, thus css rules don't cascade into shadow doms.
+
+> [!TIP]
+> vue-freecaster provides a `<FreecasterStyle/>` component that can be added to
+> the closest shadow root that contains your players (eg: your root `<App/>`
+> component). It will look for freecaster stylesheets in the `<head>`, and
+> import them inside the shadow dom:
+>
+> ```vue
+> <script setup lang="ts">
+>   import { FreecasterStyle } from '@plutotcool/vue-freecaster'
+> </script>
+>
+> <template>
+>   <FreecasterStyle/>
+>   <!-- Rest of your app -->
+> </template>
+> ```

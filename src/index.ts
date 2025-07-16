@@ -8,3 +8,7 @@ export {
   type FreecasterPlayerEmits,
   type FreecasterPlayerSlots
 } from './components/FreecasterPlayer.vue'
+
+export {
+  default as FreecasterStyle
+} from './components/FreecasterStyle.vue'

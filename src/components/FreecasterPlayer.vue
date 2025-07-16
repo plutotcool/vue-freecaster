@@ -4,7 +4,7 @@
   import type { Player, PlayerOptions, PlayerEvents } from '../types/Player'
 
   export interface FreecasterPlayerProps extends PlayerOptions {
-    enabled?: boolean
+
   }
 
   export interface FreecasterPlayerSlots {
@@ -49,7 +49,6 @@
     subtitles
   })
 
-  const enabled = computed(() => props.enabled)
   const options = computed(() => ({
     videoId: props.videoId,
     height: props.height,
@@ -88,7 +87,6 @@
   const attrs = useAttrs()
 
   const { element, key, attributes } = usePlayer({
-    enabled,
     options,
     player,
     paused,

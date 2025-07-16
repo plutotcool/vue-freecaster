@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import { ref } from 'vue'
-  import type { FreecasterPlayerSlots } from '../src'
+  import { type FreecasterPlayerSlots, FreecasterStyle } from '../src'
+
+  const customElement = import.meta.env.VITE_CUSTOM_ELEMENT
 
   const ids = [
     '9ab90057-8d0f-409d-b89c-5213581454e3',
@@ -10,7 +12,6 @@
   ]
 
   const mounted = ref(true)
-  const enabled = ref(true)
   const index = ref(0)
   const id = ref('')
 
@@ -77,15 +78,13 @@
 </script>
 
 <template>
+  <FreecasterStyle v-if="customElement"/>
   <main>
     <h1>vue-freecaster</h1>
     <div>
       <form @submit.prevent="onSubmit">
         <button type="button" @click="mounted = !mounted">
           {{ mounted ? 'unmount' : 'mount' }}
-        </button>
-        <button type="button" @click="enabled = !enabled">
-          {{ enabled ? 'disable' : 'enable' }}
         </button>
         <button
           type="submit"
@@ -105,7 +104,6 @@
         v-if="mounted"
         class="player"
         :video-id="ids[index]"
-        :enabled="enabled"
         controls
         autoplay
         subtitles-default-lang="fr"

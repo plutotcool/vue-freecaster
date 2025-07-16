@@ -1,8 +1,18 @@
 import './index.css'
-import { createApp } from 'vue'
+import { createApp, defineCustomElement } from 'vue'
 import { FreecasterPlugin } from '../src'
 import App from './App.vue'
 
-createApp(App)
-  .use(FreecasterPlugin)
-  .mount('#app')
+console.log(import.meta.env.VITE_CUSTOM_ELEMENT === 'true')
+
+if (import.meta.env.VITE_CUSTOM_ELEMENT === 'true') {
+  customElements.define('vue-freecaster', defineCustomElement(App, {
+    configureApp(app) {
+      app.use(FreecasterPlugin)
+    }
+  }))
+} else {
+  createApp(App)
+    .use(FreecasterPlugin)
+    .mount('vue-freecaster')
+}

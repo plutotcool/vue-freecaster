@@ -2,6 +2,7 @@ import {
   onMounted,
   onUnmounted,
   watch,
+  computed,
   shallowRef,
   toRef,
   isRef,
@@ -21,12 +22,6 @@ export interface UsePlayerParameters {
    * @default undefined
    */
   options?: MaybeRef<PlayerOptions | undefined>
-
-  /**
-   * Wether the player is enabled
-   * @default true
-   */
-  enabled?: MaybeRefOrGetter<boolean | undefined>
 
   /**
    * Optional paused model that reads and controls the player state
@@ -110,9 +105,9 @@ export interface UsePlayerParameters {
 }
 
 export interface UsePlayerContext extends UsePlayerParameters {
+  load: Ref<((element: Element) => void) | undefined>
   listeners: Required<UsePlayerParameters>['listeners']
   options: Ref<PlayerOptions | undefined>
-  enabled: Ref<boolean | undefined>
   player: Ref<Player | undefined>
   element: Ref<HTMLElement | undefined>
   attributes: Ref<PlayerAttributes>
@@ -120,22 +115,21 @@ export interface UsePlayerContext extends UsePlayerParameters {
 }
 
 export function usePlayer(parameters: UsePlayerParameters = {}): UsePlayerContext {
-  const {
+  let {
     element,
     options,
-    enabled,
     player,
     listeners = {}
   } = parameters
 
   const context: UsePlayerContext = {
     ...parameters,
+    load: shallowRef(),
     listeners,
     key: shallowRef(0),
     attributes: shallowRef<PlayerAttributes>({}),
     element: toRef(element),
     options: toRef(options),
-    enabled: toRef(enabled),
     player: isRef(player) ? player : shallowRef(player)
   }
 
@@ -226,7 +220,7 @@ function create(
   context: Pick<UsePlayerContext, 'listeners' | 'player' | 'element'>,
   value: Player
 ): void {
-  remove(context)
+  context.player.value && remove(context)
   context.player.value = value
   bind(context)
 }
@@ -247,6 +241,8 @@ function remove(
   if (!currentElement || !parent || currentElement.parentNode) {
     return
   }
+
+  currentElement.innerHTML = ''
 
   sibling
     ? parent.insertBefore(currentElement, sibling)
@@ -282,35 +278,51 @@ function unbind({
 }
 
 function useLifecycle({
-  enabled,
   options,
   ...context
 }: UsePlayerContext): void {
+  let loadInterval: ReturnType<typeof setInterval>
+
   const initialize = (value: Player) => {
-    if (enabled.value && context.element.value?.id === value.id) {
+    if (context.element.value?.id === value.id) {
       create(context, value)
     }
   }
 
-  watch([enabled, () => options.value?.videoId], ([enabled, videoId]) => {
+  watch([() => options.value?.videoId], ([videoId]) => {
     if (!videoId) {
       remove(context)
-    } else if (enabled) {
+    } else {
       context.player.value?.loadVideo(videoId)
     }
   })
 
-  watch([enabled, context.element], ([enabled, element]) => {
-    if (!enabled || !element) {
+  watch([
+    context.element,
+    context.player,
+    context.load
+  ], ([element, player, load]) => {
+    if (!element) {
       remove(context)
+    } else if (!player && load) {
+      load(element)
     }
   })
 
   onMounted(() => {
     (window._fcpr ||= []).push(initialize)
+    context.load.value = window.fcload
+
+    if (!context.load.value) {
+      loadInterval = setInterval(() => {
+        context.load.value = window.fcload
+        context.load.value && clearInterval(loadInterval)
+      }, 50)
+    }
   })
 
   onUnmounted(() => {
+    clearInterval(loadInterval)
     const index = (window._fcpr ||= []).indexOf(initialize)
     index === -1 || _fcpr.splice(index, 1)
     remove(context)
@@ -536,7 +548,9 @@ function useFullscreen({
       return
     }
 
-    fullscreen ? player?.requestFullscreen() : document?.exitFullscreen()
+    fullscreen
+      ? player?.requestFullscreen()
+      : document.fullscreenElement === player?.getRootNode() && document.exitFullscreen()
   })
 }
 
@@ -554,8 +568,8 @@ function useSubtitles({
   }
 
   const update = () => {
-    const tracks: TextTrack[] = !player?.value.textTracks.length ? [] : Array
-      .from(player?.value.textTracks)
+    const tracks: TextTrack[] = !player.value?.textTracks.length ? [] : Array
+      .from(player.value?.textTracks || [])
       .filter(track => track.kind === 'subtitles')
 
     if (
@@ -620,12 +634,11 @@ function useReadyState({
 }
 
 function useAttributes({
-  enabled,
   options,
   attributes
 }: UsePlayerContext): void {
-  watch([enabled, options], ([enabled, options]) => {
-    attributes.value = enabled ? resolveAttributes(options) : {}
+  watch([options], ([options]) => {
+    attributes.value = resolveAttributes(options)
   }, {
     deep: true,
     immediate: true
@@ -633,15 +646,14 @@ function useAttributes({
 }
 
 function useKey({
-  enabled,
   options,
   key
 }: UsePlayerContext): void {
-  watch([() => options.value?.videoId, enabled], (
-    [videoId, enabled],
+  watch([() => options.value?.videoId], (
+    [videoId],
     [oldVideoId]
   ) => {
-    if (!enabled || (!videoId !== !oldVideoId)) {
+    if ((!videoId !== !oldVideoId)) {
       key.value++
     }
   })
