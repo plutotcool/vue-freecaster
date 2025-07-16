@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v2.1.3
+
+
+### 🩹 Fixes
+
+- Handle scoped styles on multiple roots component ([a861e8d](https://github.com/plutotcool/vue-freecaster/commit/a861e8d))
+
+### ❤️ Contributors
+
+- Juliendargelos <hello@julien.gl>
+
 ## v2.1.2
 
 
