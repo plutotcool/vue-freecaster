@@ -1,6 +1,21 @@
 # Changelog
 
 
+## v3.0.0
+
+
+### 🚀 Enhancements
+
+- ⚠️  Remove unstable scoped css hack and slot ([e8e473b](https://github.com/plutotcool/vue-freecaster/commit/e8e473b))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Remove unstable scoped css hack and slot ([e8e473b](https://github.com/plutotcool/vue-freecaster/commit/e8e473b))
+
+### ❤️ Contributors
+
+- Juliendargelos <hello@julien.gl>
+
 ## v2.1.5
 
 
