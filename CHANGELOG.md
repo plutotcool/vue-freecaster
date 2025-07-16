@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v2.1.5
+
+
+### 🩹 Fixes
+
+- Scoped styles hash ([3442849](https://github.com/plutotcool/vue-freecaster/commit/3442849))
+
+### ❤️ Contributors
+
+- Juliendargelos <hello@julien.gl>
+
 ## v2.1.4
 
 
