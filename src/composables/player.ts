@@ -681,8 +681,11 @@ function resolveAttributes(options: PlayerOptions = {}): PlayerAttributes {
   const attributes = Object
     .entries(options)
     .reduce((attributes, [option, value]) => {
-      const attribute = (<any>DATA_ATTRIBUTE_NAMES)[option] || option
-      attributes[`data-${attribute}`] = value
+      if (value !== undefined) {
+        const attribute = (<any>DATA_ATTRIBUTE_NAMES)[option] || option
+        attributes[`data-${attribute}`] = value
+      }
+
       return attributes
     }, <PlayerAttributes>{
       ...DEFAULT_ATTRIBUTES
