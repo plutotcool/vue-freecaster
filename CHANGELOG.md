@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v2.1.4
+
+
+### 🩹 Fixes
+
+- Global component types ([d59e2eb](https://github.com/plutotcool/vue-freecaster/commit/d59e2eb))
+
+### ❤️ Contributors
+
+- Juliendargelos <hello@julien.gl>
+
 ## v2.1.3
 
 
