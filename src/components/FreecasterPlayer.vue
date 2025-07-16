@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useAttrs, computed } from 'vue'
+  import { useAttrs, computed, getCurrentInstance } from 'vue'
   import { usePlayer } from '../composables/player'
   import type { Player, PlayerOptions, PlayerEvents } from '../types/Player'
 
@@ -22,6 +22,8 @@
   }
 
   export type FreecasterPlayerEmits = PlayerEvents
+
+  const scopeId = getCurrentInstance().parent.proxy.$options.__scopeId
 
   const props = defineProps<FreecasterPlayerProps>()
   const slots = defineSlots<FreecasterPlayerSlots>()
@@ -105,6 +107,7 @@
   <div
     ref="element"
     v-bind="{
+      ...(scopeId ? { [scopeId]: '' } : null),
       ...attrs,
       ...attributes
     }"
