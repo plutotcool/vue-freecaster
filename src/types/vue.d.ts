@@ -1,4 +1,4 @@
-import type { FreecasterPlayer } from '../components/vue-freecaster'
+import type FreecasterPlayer from '../components/FreecasterPlayer.vue'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
