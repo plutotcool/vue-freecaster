@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
-  import { type FreecasterPlayerSlots, FreecasterStyle } from '../src'
+  import { shallowRef, ref, computed } from 'vue'
+  import { FreecasterStyle, type Player } from '../src'
 
   const customElement = import.meta.env.VITE_CUSTOM_ELEMENT
 
@@ -15,9 +15,15 @@
   const index = ref(0)
   const id = ref('')
 
+  const player = shallowRef<Player>()
   const paused = ref(false)
   const muted = ref(true)
   const currentTime = ref(0)
+  const fullscreen = ref(false)
+  const volume = ref<number>()
+  const readyState = ref<number>()
+  const currentSubtitles = ref<TextTrack>()
+  const subtitles = ref<TextTrack[]>()
   const preview = ref(false)
 
   function onSubmit(): void {
@@ -107,27 +113,41 @@
         controls
         autoplay
         subtitles-default-lang="fr"
-        #default="state"
+        v-model="player"
         v-model:paused="paused"
         v-model:muted="muted"
         v-model:current-time="currentTime"
-      >
-        <div class="controls">
-          <button @click="paused = !paused">
-            {{ paused ? 'play' : 'pause' }}
-          </button>
-          <button @click="muted = !muted">
-            {{ muted ? 'unmute' : 'mute' }}
-          </button>
-          <button @click="currentTime -= 5">
-            backward
-          </button>
-          <button @click="currentTime += 5">
-            forward
-          </button>
-        </div>
-        <pre>{{ formatObject(state) }}</pre>
-      </FreecasterPlayer>
+        v-model:fullscreen="fullscreen"
+        v-model:volume="volume"
+        v-model:ready-state="readyState"
+        v-model:current-subtitles="currentSubtitles"
+        v-model:subtitles="subtitles"
+      />
+      <div class="controls">
+        <button @click="paused = !paused">
+          {{ paused ? 'play' : 'pause' }}
+        </button>
+        <button @click="muted = !muted">
+          {{ muted ? 'unmute' : 'mute' }}
+        </button>
+        <button @click="currentTime -= 5">
+          backward
+        </button>
+        <button @click="currentTime += 5">
+          forward
+        </button>
+      </div>
+      <pre>{{ formatObject({
+        player,
+        paused,
+        muted,
+        fullscreen,
+        currentTime,
+        volume,
+        readyState,
+        currentSubtitles,
+        subtitles
+      }) }}</pre>
     </div>
     <div>
       <a

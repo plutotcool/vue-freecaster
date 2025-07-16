@@ -7,26 +7,9 @@
 
   }
 
-  export interface FreecasterPlayerSlots {
-    default(props: {
-      player: Player | undefined
-      paused: boolean
-      muted: boolean
-      fullscreen: boolean
-      currentTime: number
-      volume: number
-      readyState: number
-      currentSubtitles: TextTrack | undefined
-      subtitles: TextTrack[]
-    }): any
-  }
-
   export type FreecasterPlayerEmits = PlayerEvents
 
-  const scopeId = getCurrentInstance().vnode.scopeId
-
   const props = defineProps<FreecasterPlayerProps>()
-  const slots = defineSlots<FreecasterPlayerSlots>()
   const emit = defineEmits<FreecasterPlayerEmits>()
 
   const player = defineModel<Player>()
@@ -107,7 +90,6 @@
   <div
     ref="element"
     v-bind="{
-      ...(scopeId ? { [scopeId]: '' } : null),
       ...attrs,
       ...attributes
     }"
@@ -115,19 +97,5 @@
       attrs.class,
       attributes.class
     ].filter(Boolean)"
-  />
-  <slot
-    name="default"
-    v-bind="{
-      player,
-      paused,
-      muted,
-      fullscreen,
-      volume,
-      currentTime,
-      readyState,
-      currentSubtitles,
-      subtitles
-    }"
   />
 </template>

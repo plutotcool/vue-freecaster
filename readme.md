@@ -56,7 +56,7 @@ attached to an element ref.
 ### Player component
 
 The `FreecasterPlayer` component is a wrapper around the `usePlayer` composable.
-It also provides models and slot props for the player state.
+It also provides models for the player state.
 
 ```vue
 <script setup lang="ts">
@@ -89,33 +89,7 @@ It also provides models and slot props for the player state.
 </template>
 ```
 
-```vue
-<script setup lang="ts">
-  import { FreecasterPlayer } from '@plutotcool/vue-freecaster'
-</script>
-
-<template>
-  <FreecasterPlayer
-    video-id="..."
-    #default="{
-      player,
-      muted,
-      paused,
-      volume,
-      currentTime,
-      readyState,
-      fullscreen,
-      subtitles,
-      currentSubtitles
-    }"
-  >
-    <!-- ... !-->
-  </FreecasterPlayer>
-</template>
-```
-
 - [Component props](https://plutotcool.github.io/vue-freecaster/interfaces/_FreecasterPlayer__.FreecasterPlayerProps.html)
-- [Component slots](https://plutotcool.github.io/vue-freecaster/interfaces/_FreecasterPlayer__.FreecasterPlayerSlots.html)
 - [Component events](https://plutotcool.github.io/vue-freecaster/types/_FreecasterPlayer__.FreecasterPlayerEmits.html)
 
 ### Custom elements
