@@ -23,7 +23,7 @@
 
   export type FreecasterPlayerEmits = PlayerEvents
 
-  const scopeId = getCurrentInstance().parent.proxy.$options.__scopeId
+  const scopeId = getCurrentInstance().vnode.scopeId
 
   const props = defineProps<FreecasterPlayerProps>()
   const slots = defineSlots<FreecasterPlayerSlots>()
