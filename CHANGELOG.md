@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v2.1.1
+
+
+### 🩹 Fixes
+
+- Ignore undefined options ([4d369ca](https://github.com/plutotcool/vue-freecaster/commit/4d369ca))
+
+### ❤️ Contributors
+
+- Juliendargelos <hello@julien.gl>
+
 ## v2.1.0
 
 
