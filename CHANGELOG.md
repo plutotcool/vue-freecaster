@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v2.1.0
+
+
+### 🚀 Enhancements
+
+- Add globally registered FreecasterPlayer component type ([99b5567](https://github.com/plutotcool/vue-freecaster/commit/99b5567))
+
+### ❤️ Contributors
+
+- Juliendargelos <hello@julien.gl>
+
 ## v2.0.1
 
 ## v2.0.0
