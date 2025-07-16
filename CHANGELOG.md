@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v2.1.2
+
+
+### 🩹 Fixes
+
+- Asynchronous loading issues ([1386414](https://github.com/plutotcool/vue-freecaster/commit/1386414))
+
+### ❤️ Contributors
+
+- Juliendargelos <hello@julien.gl>
+
 ## v2.1.1
 
 
