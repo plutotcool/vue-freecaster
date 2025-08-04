@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v3.1.0
+
+
+### 🚀 Enhancements
+
+- Keep alive mode to handle vue transitions ([4468730](https://github.com/plutotcool/vue-freecaster/commit/4468730))
+
+### ❤️ Contributors
+
+- Juliendargelos <hello@julien.gl>
+
 ## v3.0.0
 
 
