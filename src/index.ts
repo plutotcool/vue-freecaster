@@ -5,8 +5,7 @@ export * from './composables/player'
 export {
   default as FreecasterPlayer,
   type FreecasterPlayerProps,
-  type FreecasterPlayerEmits,
-  type FreecasterPlayerSlots
+  type FreecasterPlayerEmits
 } from './components/FreecasterPlayer.vue'
 
 export {

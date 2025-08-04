@@ -15,6 +15,7 @@
   const index = ref(0)
   const id = ref('')
 
+  const destroy = shallowRef<() => void>()
   const player = shallowRef<Player>()
   const paused = ref(false)
   const muted = ref(true)
@@ -106,23 +107,31 @@
       </form>
     </div>
     <div>
-      <FreecasterPlayer
-        v-if="mounted"
-        class="player"
-        :video-id="ids[index]"
-        controls
-        autoplay
-        subtitles-default-lang="fr"
-        v-model="player"
-        v-model:paused="paused"
-        v-model:muted="muted"
-        v-model:current-time="currentTime"
-        v-model:fullscreen="fullscreen"
-        v-model:volume="volume"
-        v-model:ready-state="readyState"
-        v-model:current-subtitles="currentSubtitles"
-        v-model:subtitles="subtitles"
-      />
+      <transition
+        mode="out-in"
+        @after-leave="destroy()"
+      >
+        <FreecasterPlayer
+          v-if="mounted"
+          ref="component"
+          class="player"
+          :video-id="ids[index]"
+          controls
+          autoplay
+          subtitles-default-lang="fr"
+          keep-alive
+          v-model="player"
+          v-model:paused="paused"
+          v-model:muted="muted"
+          v-model:current-time="currentTime"
+          v-model:fullscreen="fullscreen"
+          v-model:volume="volume"
+          v-model:ready-state="readyState"
+          v-model:current-subtitles="currentSubtitles"
+          v-model:subtitles="subtitles"
+          v-model:destroy="destroy"
+        />
+      </transition>
       <div class="controls">
         <button @click="paused = !paused">
           {{ paused ? 'play' : 'pause' }}
@@ -259,6 +268,14 @@
     position: relative;
     margin: 0;
     display: block !important;
+
+    &.v-enter-from, &.v-leave-to {
+      opacity: 0;
+    }
+
+    &.v-enter-active, &.v-leave-active {
+      transition: opacity .2s;
+    }
   }
 
   .controls {

@@ -6,6 +6,7 @@ import {
   shallowRef,
   toRef,
   isRef,
+  unref,
   type Ref,
   type MaybeRefOrGetter,
   type MaybeRef,
@@ -85,6 +86,15 @@ export interface UsePlayerParameters {
   element?: MaybeRef<HTMLElement | undefined>
 
   /**
+   * Wether to keep the player instance alive after the component is unmounted.
+   * It can then be manually destroyed by calling
+   * {@link UsePlayerContext.destroy}. This can be useful to keep the player
+   * instance alive during vue leave transitions.
+   * @default false
+   */
+  keepAlive?: MaybeRef<boolean>
+
+  /**
    * Default event listener, called for all events
    * @default undefined
    */
@@ -105,12 +115,46 @@ export interface UsePlayerParameters {
 }
 
 export interface UsePlayerContext extends UsePlayerParameters {
+  /**
+   * Ref to the freecaster load function.
+   */
   load: Ref<((element: Element) => void) | undefined>
+
+  /**
+   * Destroy the currently attached player instance.
+   */
+  destroy: () => void
+
+  /**
+   * Event listeners for the player.
+   */
   listeners: Required<UsePlayerParameters>['listeners']
+
+  /**
+   * Player options provided in {@link UsePlayerParameters.options}.
+   */
   options: Ref<PlayerOptions | undefined>
+
+  /**
+   * Ref to the player instance.
+   */
   player: Ref<Player | undefined>
+
+  /**
+   * Ref to the element where the player is attached. Can be passed to the
+   * special ref prop of an element to attach the player to.
+   */
   element: Ref<HTMLElement | undefined>
+
+  /**
+   * Ref to the player attributes that can be used to bind to the player. Can be
+   * passed the v-bind directive of an element to attach the player to.
+   */
   attributes: Ref<PlayerAttributes>
+
+  /**
+   * Ref to a key that is updated every time the player loads a new video.
+   */
   key: Ref<number>
 }
 
@@ -124,6 +168,7 @@ export function usePlayer(parameters: UsePlayerParameters = {}): UsePlayerContex
 
   const context: UsePlayerContext = {
     ...parameters,
+    destroy: () => remove(context),
     load: shallowRef(),
     listeners,
     key: shallowRef(0),
@@ -281,6 +326,10 @@ function useLifecycle({
   options,
   ...context
 }: UsePlayerContext): void {
+  if (context.player.value) {
+    context.player.value = undefined
+  }
+
   let loadInterval: ReturnType<typeof setInterval>
 
   const initialize = (value: Player) => {
@@ -321,7 +370,7 @@ function useLifecycle({
     clearInterval(loadInterval)
     const index = (window._fcpr ||= []).indexOf(initialize)
     index === -1 || _fcpr.splice(index, 1)
-    remove(context)
+    unref(context.keepAlive) || context.destroy()
   })
 }
 

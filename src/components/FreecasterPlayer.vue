@@ -4,7 +4,7 @@
   import type { Player, PlayerOptions, PlayerEvents } from '../types/Player'
 
   export interface FreecasterPlayerProps extends PlayerOptions {
-
+    keepAlive?: boolean
   }
 
   export type FreecasterPlayerEmits = PlayerEvents
@@ -21,18 +21,7 @@
   const readyState = defineModel<number>('readyState', { default: 0 })
   const currentSubtitles = defineModel<TextTrack>('currentSubtitles')
   const subtitles = defineModel<TextTrack[]>('subtitles', { default: [] })
-
-  defineExpose({
-    player,
-    paused,
-    muted,
-    fullscreen,
-    volume,
-    currentTime,
-    readyState,
-    currentSubtitles,
-    subtitles
-  })
+  const destroyModel = defineModel<() => void>('destroy')
 
   const options = computed(() => ({
     videoId: props.videoId,
@@ -71,7 +60,8 @@
 
   const attrs = useAttrs()
 
-  const { element, key, attributes } = usePlayer({
+  const { element, key, attributes, destroy } = usePlayer({
+    keepAlive: computed(() => props.keepAlive),
     options,
     player,
     paused,
@@ -83,6 +73,21 @@
     emit,
     currentSubtitles,
     subtitles,
+  })
+
+  destroyModel.value = destroy
+
+  defineExpose({
+    player,
+    paused,
+    muted,
+    fullscreen,
+    volume,
+    currentTime,
+    readyState,
+    currentSubtitles,
+    subtitles,
+    destroy
   })
 </script>
 
