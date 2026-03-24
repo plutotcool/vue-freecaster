@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v3.1.1
+
+
+### 🩹 Fixes
+
+- Syntax errors in release workflow ([ee784e8](https://github.com/plutotcool/vue-freecaster/commit/ee784e8))
+
+### ❤️ Contributors
+
+- Juliendargelos <hello@julien.gl>
+
 ## v3.1.0
 
 
