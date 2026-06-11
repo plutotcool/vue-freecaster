@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v3.1.2
+
+
+### 🩹 Fixes
+
+- Player initializion issue ([3d88d6f](https://github.com/plutotcool/vue-freecaster/commit/3d88d6f))
+
+### ❤️ Contributors
+
+- Juliendargelos <hello@julien.gl>
+
 ## v3.1.1
 
 
