@@ -7,6 +7,7 @@ import {
   toRef,
   isRef,
   unref,
+  nextTick,
   type Ref,
   type MaybeRefOrGetter,
   type MaybeRef,
@@ -267,7 +268,8 @@ function create(
 ): void {
   context.player.value && remove(context)
   context.player.value = value
-  bind(context)
+
+  nextTick(() => bind(context))
 }
 
 function remove(
